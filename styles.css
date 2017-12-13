@@ -1,0 +1,12 @@
+/* the game grid */
+.game-grid {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-rows: 20% 20% 20% 20% 20%;
+}
+
+/* each block in the grid */
+.block {
+    display: flex;
+    background: grey;
+}
