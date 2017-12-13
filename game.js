@@ -5,7 +5,6 @@ var player = {
     moves = new Array(4).fill(0);
 }
 
-
 function Piece(xPos, yPos, xOri, yOri) {
     this.xPos = xPos;
     this.yPos = yPos;
@@ -43,6 +42,15 @@ function moveCount(piece){
     if (x == SIZE && y == SIZE && player.moves[0] == 0)
 	count -= 1;
     return count;
+}
+
+function placePiece(x,y, xOir, yOir){
+    piece = new Piece(x,y, xOri, yOri);
+    if (moveCount(piece) != 0){
+	baord[x][y] = piece;
+	return true;
+    }
+    return false;
 }
 
 function drawGrid(){
