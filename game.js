@@ -17,9 +17,9 @@ function isOccupied(x,y){
 }
 
 function moveCount(piece){
-    int x = piece.xPos;
-    int y = piece.yPos;
-    int count = 0;
+    var x = piece.xPos;
+    var y = piece.yPos;
+    var count = 0;
     while (0 <= x && x <= SIZE){
 	if (!(isOccupied(x,y)))
 	    count++;
@@ -54,5 +54,16 @@ function placePiece(x,y, xOir, yOir){
 }
 
 function drawGrid(){
-
+    var x = 1;
+    var y = 1;
+    while (x <= 5) {
+	y = 1;
+	while (y <= 5) {
+	    var block = document.createElement("DIV");
+	    block.appendChild(document.createTextNode(x + ", " + y));
+	    document.getElementById("game-grid").appendChild(block);
+	    y++;
+	}
+        x++;
+    }
 }

@@ -12,11 +12,11 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
 	<script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    <link rel="shortcut icon" href="favicon.ico">
+    <!-- <link rel="shortcut icon" href="favicon.ico"> -->
 
-    <!-- bootstrap and scripts -->
+    <!-- bootstrap and jquery -->
     <script src="game.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.bundle.min.js" integrity="sha384-3ziFidFTgxJXHMDttyPJKDuTlmxJlwbSkojudK/CkRqKDOmeSbN6KLrGdrBQnT2n" crossorigin="anonymous"></script>
@@ -32,11 +32,11 @@
 	</div>
 	<div class="col-md-6">
 	  <!-- main game content -->
-	  <div class="game-grid">
+	  <div id="game-grid" class="game-grid">
 	    
 	  </div>
 	  <div>
-	    <button type="button" onclick="drawGrid()">Draw the Grid!</button>
+	    <button class="draw-button" type="button" onclick="drawGrid();">Draw the Grid!</button>
 	  </div>
 	</div>
 	<div class="col-md-3">
@@ -45,5 +45,24 @@
 	</div>
       </div>
     </div>
+
+    <!-- main game script -->
+    <script src="game.js"></script>
+    <script>
+      function drawGrid(){
+        var x = 1;
+        var y = 1;
+        while (x <= 5) {
+	  y = 1;
+	  while (y <= 5) {
+	    var block = document.createElement("DIV");
+	    block.appendChild(document.createTextNode(x + ", " + y));
+	    document.getElementById("game-grid").appendChild(block);
+	    y++;
+	  }
+          x++;
+        }
+      }
+    </script>
   </body>
 </html>
