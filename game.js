@@ -2,7 +2,7 @@ var board = new Array(SIZE).fill(new Array(SIZE).fill(0));
 
 var player = {
     name: "Name"
-    moves = new Array(4);
+    moves = new Array(4).fill(0);
 }
 
 
@@ -32,12 +32,16 @@ function moveCount(piece){
 	y += piece.yOrientation;
     }
 
-    if (count == 1){
-	if (x == 0 || x == SIZE || y == 0 || y == SIZE){
-	    if (x == 0 && y == 0)
-		
-	}
-    }
+    //if (count == 1){ this function returns number of moves....
+    
+    if (x == 0 && y == 0 && player.moves[2] == 0)
+	count -= 1;
+    if (x == 0 && y == SIZE && player.moves[1] == 0)
+	count -= 1;
+    if (x == SIZE && y == 0 && player.moves[3] == 0)
+	count -= 1;
+    if (x == SIZE && y == SIZE && player.moves[0] == 0)
+	count -= 1;
     return count;
 }
 
