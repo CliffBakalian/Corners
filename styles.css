@@ -1,14 +1,31 @@
+/* the board */
+.board {
+    position: relative;
+    overflow: hidden;
+    height: 40vw;
+    border: 10px solid #001F3F;
+    border-radius: 10px;
+}
+
 /* the game grid */
 .game-grid {
     display: grid;
     grid-template-columns: 20% 20% 20% 20% 20%;
     grid-template-rows: 20% 20% 20% 20% 20%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 /* each block in the grid */
 .block {
     display: flex;
+    width: 100%;
+    height: 100%;
     background: grey;
+    box-shadow: inset 2px 2px 0 rgba(255,255,255,0.05), inset -2px -2px 0 #001F3F;
 }
 
 .draw-button {

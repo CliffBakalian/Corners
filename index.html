@@ -32,11 +32,11 @@
 	</div>
 	<div class="col-md-6">
 	  <!-- main game content -->
-	  <div id="game-grid" class="game-grid">
-	    
+	  <div class="board">
+	    <div id="game-grid" class="game-grid"></div>
 	  </div>
 	  <div>
-	    <button class="draw-button" type="button" onclick="drawGrid();">Draw the Grid!</button>
+	    <button id="draw-button" class="draw-button" type="button" onclick="drawGrid();">Draw the Grid!</button>
 	  </div>
 	</div>
 	<div class="col-md-3">
@@ -55,13 +55,15 @@
         while (x <= 5) {
 	  y = 1;
 	  while (y <= 5) {
-	    var block = document.createElement("DIV");
+	    var block = document.createElement("SPAN");
 	    block.appendChild(document.createTextNode(x + ", " + y));
+            block.classList.add('block');
 	    document.getElementById("game-grid").appendChild(block);
 	    y++;
 	  }
           x++;
         }
+        document.getElementById("draw-button").style.display = "none";
       }
     </script>
   </body>
