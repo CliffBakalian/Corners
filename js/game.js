@@ -56,9 +56,17 @@ function placePiece(x,y, xOir, yOir){
 }
 
 function drawGrid(){
-  SIZE = $('#size-input').value;
+  SIZE = $('#size-input').val();
+  alert(SIZE);
   var x = 0;
   var y = 0;
+  var s = 100 / SIZE + "%";
+  var cell = "" + s;
+  while (++x < SIZE)
+    cell = cell + " " + s;
+  $('.game-grid').css("grid-template-columns", cell);
+  $('.game-grid').css("grid-template-rows", cell);
+  x = 0;
   while (x < SIZE) {
     y = 0;
     while (y < SIZE) {

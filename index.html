@@ -7,7 +7,7 @@
     <meta name="description" content="Corners - A game about cornering your opponent">
     <meta name="author" content="Cliff and Justin">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
     <!--[if lt IE 9]>
       <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -27,16 +27,16 @@
 
   <body>
     <div class="container-fluid">
-      <div class="row">
+      <div class="row align-items-center">
         <!-- sidebar left -->
         <div class="col-md-3">
           <form class="draw-form">
             <div class="row">
               <div class="col">
-                <input type="text" id="size-input" class="form-control" defualt="5" name="size">
+                <input type="text" id="size-input" class="form-control" value="5" name="size">
               </div>
               <div class="col">
-                <button id="draw-button" class="btn btn-primary draw-button" type="button" onclick="drawGrid();">Draw the Grid!</button>
+                <button id="draw-button" class="btn btn-primary draw-button" type="button" onclick="javascript:drawGrid();">Draw the Grid!</button>
               </div>
             </div>
           </form>
@@ -44,6 +44,7 @@
 
         <!-- main game content -->
         <div class="col-md-6">
+          <h1 class="title">Corners!</h1>
           <div class="board">
             <div id="game-grid" class="game-grid">
             
