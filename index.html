@@ -25,18 +25,52 @@
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   </head>
 
+  <!-- 
+    menu:
+    sound effects
+    board size
+    custom colors
+    2 player or cpu
+    puzzles
+    challenge / quick
+    submit move
+    
+    more?
+  -->
   <body>
     <div class="container-fluid">
       <div class="row align-items-center">
         <!-- sidebar left -->
         <div class="col-md-3">
+          <h3>Game Setup:</h3>
           <form class="draw-form">
             <div class="row">
               <div class="col">
-                <input type="text" id="size-input" class="form-control" value="5" name="size">
+                <input type="text" id="player1" class="form-control" value="Player 1">
               </div>
               <div class="col">
-                <button id="draw-button" class="btn btn-primary draw-button" type="button" onclick="javascript:drawGrid();">Draw the Grid!</button>
+                <input type="text" id="player2" class="form-control" value="Player 2">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                Game Type:
+                <label class="radio-inline"><input type="radio" name="type"> 2-Player</label>
+                <label class="radio-inline"><input type="radio" name="type"> Computer</label>
+                <label class="radio-inline"><input type="radio" name="type"> Puzzle</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                Board Size:
+                <label class="radio-inline"><input type="radio" name="size" value="5"> 5</label>
+                <label class="radio-inline"><input type="radio" name="size" value="7"> 7</label>
+                <label class="radio-inline"><input type="radio" name="size" value="9"> 9</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <button id="draw-button" class="btn btn-primary draw-button" type="button" onclick="javascript:start();">Start!</button>
               </div>
             </div>
           </form>
@@ -44,34 +78,39 @@
 
         <!-- main game content -->
         <div class="col-md-6">
-          <h1 class="title">Corners!</h1>
+          <center><h1>Corners!</h1></center>
+          <p>Messages: <span class="messages">...</span></p>
           <div class="board">
             <div id="game-grid" class="game-grid">
-            
+              <span class="block" ondrop="javascript:drop(event)" ondragover="javascript:allowDrop(event)"></span>
             </div>
           </div>
           
           <div class="container-fluid">
             <div class="row">
               <div class="col-sm-3">
-                <span class="piece"><i class="fa fa-angle-left rotated"></i></span>
+                <span id="piece1" class="piece" draggable="true" ondragstart="drag(event)"><i class="fa fa-angle-left rotated"></i></span>
               </div>
               <div class="col-sm-3">
-                <span class="piece"><i class="fa fa-angle-up rotated"></i></span>
+                <span id="piece2" class="piece" draggable="true" ondragstart="drag(event)"><i class="fa fa-angle-up rotated"></i></span>
               </div>
               <div class="col-sm-3">
-                <span class="piece"><i class="fa fa-angle-right rotated"></i></span>
+                <span id="piece3" class="piece" draggable="true" ondragstart="drag(event)"><i class="fa fa-angle-right rotated"></i></span>
               </div>
               <div class="col-sm-3">
-                <span class="piece"><i class="fa fa-angle-down rotated"></i></span>
+                <span id="piece4" class="piece" draggable="true" ondragstart="drag(event)"><i class="fa fa-angle-down rotated"></i></span>
               </div>
             </div>
           </div>
+          
+          <center>
+            <button id="next" class="btn btn-primary" onclick="javascript:submitMove()">Confirm Move</button>
+          </center>
         </div>
 
         <!-- sidebar right -->
         <div class="col-md-3">
-
+          
         </div>
       </div>
     </div>
