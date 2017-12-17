@@ -3,20 +3,22 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta charset="utf-8">
-    <title>Cornered!</title>
-    <meta name="description" content="Cornered - A game about cornering your opponent">
+    <title>Corners!</title>
+    <meta name="description" content="Corners - A game about cornering your opponent">
     <meta name="author" content="Cliff and Justin">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="styles.css">
     <!--[if lt IE 9]>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <!-- <link rel="shortcut icon" href="favicon.ico"> -->
 
     <!-- bootstrap and jquery -->
-    <script src="game.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.bundle.min.js" integrity="sha384-3ziFidFTgxJXHMDttyPJKDuTlmxJlwbSkojudK/CkRqKDOmeSbN6KLrGdrBQnT2n" crossorigin="anonymous"></script>
@@ -26,45 +28,54 @@
   <body>
     <div class="container-fluid">
       <div class="row">
-	<div class="col-md-3">
-	  <!-- sidebar left -->
+        <!-- sidebar left -->
+        <div class="col-md-3">
+          <form class="draw-form">
+            <div class="row">
+              <div class="col">
+                <input type="text" id="size-input" class="form-control" defualt="5" name="size">
+              </div>
+              <div class="col">
+                <button id="draw-button" class="btn btn-primary draw-button" type="button" onclick="drawGrid();">Draw the Grid!</button>
+              </div>
+            </div>
+          </form>
+        </div>
 
-	</div>
-	<div class="col-md-6">
-	  <!-- main game content -->
-	  <div class="board">
-	    <div id="game-grid" class="game-grid"></div>
-	  </div>
-	  <div>
-	    <button id="draw-button" class="draw-button" type="button" onclick="drawGrid();">Draw the Grid!</button>
-	  </div>
-	</div>
-	<div class="col-md-3">
-	  <!-- sidebar right -->
+        <!-- main game content -->
+        <div class="col-md-6">
+          <div class="board">
+            <div id="game-grid" class="game-grid">
+            
+            </div>
+          </div>
+          
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-sm-3">
+                <span class="piece"><i class="fa fa-angle-left rotated"></i></span>
+              </div>
+              <div class="col-sm-3">
+                <span class="piece"><i class="fa fa-angle-up rotated"></i></span>
+              </div>
+              <div class="col-sm-3">
+                <span class="piece"><i class="fa fa-angle-right rotated"></i></span>
+              </div>
+              <div class="col-sm-3">
+                <span class="piece"><i class="fa fa-angle-down rotated"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-	</div>
+        <!-- sidebar right -->
+        <div class="col-md-3">
+
+        </div>
       </div>
     </div>
-
-    <!-- main game script -->
-    <script src="game.js"></script>
-    <script>
-      function drawGrid(){
-        var x = 1;
-        var y = 1;
-        while (x <= 5) {
-	  y = 1;
-	  while (y <= 5) {
-	    var block = document.createElement("SPAN");
-	    block.appendChild(document.createTextNode(x + ", " + y));
-            block.classList.add('block');
-	    document.getElementById("game-grid").appendChild(block);
-	    y++;
-	  }
-          x++;
-        }
-        document.getElementById("draw-button").style.display = "none";
-      }
-    </script>
+    
+    <!-- game js -->
+    <script type="text/javascript" src="js/game.js"></script>
   </body>
 </html>
