@@ -13,7 +13,6 @@
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <!-- <link rel="shortcut icon" href="favicon.ico"> -->
-
     <!-- bootstrap and jquery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -24,7 +23,6 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.bundle.min.js" integrity="sha384-3ziFidFTgxJXHMDttyPJKDuTlmxJlwbSkojudK/CkRqKDOmeSbN6KLrGdrBQnT2n" crossorigin="anonymous"></script>
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   </head>
-
   <!-- 
     menu:
     sound effects
@@ -42,79 +40,122 @@
       <div class="row align-items-center">
         <!-- sidebar left -->
         <div class="col-md-3">
-          <h3>Game Setup:</h3>
+          <center><h3>Game Setup:</h3></center>
           <form class="draw-form">
-            <div class="row">
-              <div class="col">
+            <hr />
+            <div class="row align-items-center">
+              <div class="col-lg-6">
                 <input type="text" id="player1" class="form-control" value="Player 1">
               </div>
-              <div class="col">
+              <div class="col-lg-2">
+                <input type="color" id="color1" class="form-control" value="#7575FF">
+              </div>
+              <div class="col-lg-4">
+                <label class="form-check"><input type="radio" name="first" value="0" checked> first</label>
+              </div>
+            </div>
+            <div class="row align-items-center">
+              <div class="col-lg-6">
                 <input type="text" id="player2" class="form-control" value="Player 2">
               </div>
+              <div class="col-lg-2">
+                <input type="color" id="color2" class="form-control" value="#FF7575">
+              </div>
+              <div class="col-lg-4">
+                <label class="form-check"><input type="radio" name="first" value="1"> first</label>
+              </div>
             </div>
-            <div class="row">
+            <hr />
+            <div class="row align-items-center">
               <div class="col">
-                Game Type:
-                <label class="radio-inline"><input type="radio" name="type"> 2-Player</label>
-                <label class="radio-inline"><input type="radio" name="type"> Computer</label>
-                <label class="radio-inline"><input type="radio" name="type"> Puzzle</label>
+                <p class="text-right">Game Type:</p>
+              </div>
+              <div class="col">
+                <label class="form-check"><input type="radio" name="type" value="0" checked> 2-Player</label>
+                <label class="form-check"><input type="radio" name="type" value="1"> Computer</label>
+                <label class="form-check"><input type="radio" name="type" value="2"> Puzzle</label>
+              </div>
+            </div>
+            <hr />
+            <div class="row align-items-center">
+              <div class="col">
+                <p class="text-right">Board Size:</p>
+              </div>
+              <div class="col">
+                <label class="form-check"><input type="radio" name="size" value="5" checked> 5</label>
+                <label class="form-check"><input type="radio" name="size" value="7"> 7</label>
+                <label class="form-check"><input type="radio" name="size" value="9"> 9</label>
               </div>
             </div>
             <div class="row">
               <div class="col">
-                Board Size:
-                <label class="radio-inline"><input type="radio" name="size" value="5"> 5</label>
-                <label class="radio-inline"><input type="radio" name="size" value="7"> 7</label>
-                <label class="radio-inline"><input type="radio" name="size" value="9"> 9</label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <button id="draw-button" class="btn btn-primary draw-button" type="button" onclick="javascript:start();">Start!</button>
+                <center><button id="draw-button" class="btn btn-primary draw-button" type="button" onclick="javascript:start();">Start!</button></center>
               </div>
             </div>
           </form>
         </div>
-
-        <!-- main game content -->
+        <!-- main game area -->
         <div class="col-md-6">
-          <center><h1>Corners!</h1></center>
-          <p>Messages: <span class="messages">...</span></p>
+          <center>
+            <h1>Corners!</h1>
+          </center>
+          <p>Messages: <span id="messages">...</span></p>
+          <!-- board -->
           <div class="board">
             <div id="game-grid" class="game-grid">
+              <!-- one initial block -->
               <span class="block" ondrop="javascript:drop(event)" ondragover="javascript:allowDrop(event)"></span>
             </div>
           </div>
-          
-          <div class="container-fluid">
+        </div>
+        <!-- sidebar right -->
+        <div class="col-md-3">
+          <!-- pieces -->
+          <div id="moves-0" class="container-fluid">
+            <!-- player1 pieces -->
             <div class="row">
-              <div class="col-sm-3">
-                <span id="piece1" class="piece" draggable="true" ondragstart="drag(event)"><i class="fa fa-angle-left rotated"></i></span>
+              <div class="col">
+                <span id="piece1-0" class="piece" draggable="true" ondragstart="drag(event, 1, 1)"><i class="fa fa-angle-left rotated"></i></span>
               </div>
-              <div class="col-sm-3">
-                <span id="piece2" class="piece" draggable="true" ondragstart="drag(event)"><i class="fa fa-angle-up rotated"></i></span>
+              <div class="col">
+                <span id="piece3-0" class="piece" draggable="true" ondragstart="drag(event, -1, 1)"><i class="fa fa-angle-up rotated"></i></span>
               </div>
-              <div class="col-sm-3">
-                <span id="piece3" class="piece" draggable="true" ondragstart="drag(event)"><i class="fa fa-angle-right rotated"></i></span>
+            </div>
+            <div class="row">
+              <div class="col">
+                <span id="piece2-0" class="piece" draggable="true" ondragstart="drag(event, 1, -1)"><i class="fa fa-angle-down rotated"></i></span>
               </div>
-              <div class="col-sm-3">
-                <span id="piece4" class="piece" draggable="true" ondragstart="drag(event)"><i class="fa fa-angle-down rotated"></i></span>
+              <div class="col">
+                <span id="piece4-0" class="piece" draggable="true" ondragstart="drag(event, -1, -1)"><i class="fa fa-angle-right rotated"></i></span>
               </div>
             </div>
           </div>
-          
-          <center>
-            <button id="next" class="btn btn-primary" onclick="javascript:submitMove()">Confirm Move</button>
-          </center>
-        </div>
-
-        <!-- sidebar right -->
-        <div class="col-md-3">
-          
+          <hr />
+          <div id="moves-1" class="container-fluid">
+            <!-- player2 pieces -->
+            <div class="row">
+              <div class="col">
+                <span id="piece1-1" class="piece" draggable="true" ondragstart="drag(event, 1, 1)"><i class="fa fa-angle-left rotated"></i></span>
+              </div>
+              <div class="col">
+                <span id="piece3-1" class="piece" draggable="true" ondragstart="drag(event, -1, 1)"><i class="fa fa-angle-up rotated"></i></span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <span id="piece2-1" class="piece" draggable="true" ondragstart="drag(event, 1, -1)"><i class="fa fa-angle-down rotated"></i></span>
+              </div>
+              <div class="col">
+                <span id="piece4-1" class="piece" draggable="true" ondragstart="drag(event, -1, -1)"><i class="fa fa-angle-right rotated"></i></span>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <!-- submit button -->
+          <center><button id="next" class="btn btn-primary submit" onclick="javascript:submitMove()">Confirm Move</button></center>
         </div>
       </div>
     </div>
-    
     <!-- game js -->
     <script type="text/javascript" src="js/game.js"></script>
   </body>
