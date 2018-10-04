@@ -1,23 +1,10 @@
-// Variables
-
-var SIZE = 5;
-var board = [];
-var player1 = new Player("Player 1", "#7575FF", false);
-var player2 = new Player("Player 2", "#FF7575", false);
-var currTurn = 0; // 0 - player1, 1 - player2
-var currMove = new Piece(-1, -1, 1, 1); // -1 means move not placed
-var prevMoves = []; // will hold past 2 moves (in order), [0] = player1, [1] = player2 (we can implement a 2d array here for possible undo-ing)
-var firstMove = true;
-var dragIcon = new Image();
-var running = false;
-
 // Constructors
 
-// Orientations:
-// right down =  1 , 1  0 - piece1
-// right up   =  1 ,-1  1 - piece2
-// left down  = -1 , 1  2 - piece3
-// left up    = -1 ,-1  3 - piece4
+// Pieces:
+// 0 - piece1 - right down =  1 , 1
+// 1 = piece2 - right up   =  1 ,-1
+// 2 - piece3 - left  down = -1 , 1
+// 3 - piece4 - left  up   = -1 ,-1
 function Piece(xPos, yPos, xOri, yOri) {
   this.xPos = xPos;
   this.yPos = yPos;
@@ -25,21 +12,40 @@ function Piece(xPos, yPos, xOri, yOri) {
   this.yOri = yOri;
 }
 
-function Player(name, color, cpu) {
-  this.name = name;
+// Player object - holds data for each player
+function Player(name, color, light, cpu) {
+  this.name = name; // player's name
   this.moves = [0, 0, 0, 0]; // 1 means move has been done
   this.color = color;
-  this.lightColor = "rgba(" + parseInt(color.substring(1,3), 16) + "," + parseInt(color.substring(3,5), 16) + "," + parseInt(color.substring(5,7), 16) + ",0.25)";
+  this.lightColor = light;
   this.cpu = cpu; // true or false
 }
 
+// Variables
+
+var SIZE = 5; // holds the game board size
+var board = []; // holds the game board
+var player1 = new Player("Player 1", "#7575FF", "", false);
+var player2 = new Player("Player 2", "#FF7575", "", false);
+var currTurn = 0; // 0 - player1, 1 - player2
+var currMove = new Piece(-1, -1, 1, 1); // -1 means move not placed
+var prevMoves = []; // will hold past 2 moves (in order), [0] = player1, [1] = player2 (we can implement a 2d array here for possible undo-ing)
+var firstMove = true; // signifies if we're placing the first move
+var dragIcon = new Image(); // holds the drag image
+var running = false; // signifies if the game is running or not
+
 // Functions
+
+// takes hex color and returns rgba equivalent but lightened
+function lighten(color) {
+  return "rgba(" + parseInt(color.substring(1,3), 16) + "," + parseInt(color.substring(3,5), 16) + "," + parseInt(color.substring(5,7), 16) + ",0.25)";
+}
 
 function drag(ev, xOri, yOri) {
   dragIcon.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Circle_-_black_simple.svg/220px-Circle_-_black_simple.svg.png";
   dragIcon.width = 50;
   ev.dataTransfer.setDragImage(dragIcon, 100, 100); // change later
-  ev.dataTransfer.setData("data", ev.target.id);
+  ev.dataTransfer.setData("data", ev.target.id); // id of the piece
   ev.dataTransfer.setData("xOri", xOri);
   ev.dataTransfer.setData("yOri", yOri);
 }
@@ -53,7 +59,7 @@ function drop(ev, ele) {
   var newPos = ele.id.split("-");
   var x = parseInt(newPos[0]);
   var y = parseInt(newPos[1]);
-  if (!isOccupied(x, y)) {
+  if (!isOccupied(x, y) && ev.target.classList[0] == "block") {
     var child;
     var data = ev.dataTransfer.getData("data");
     var oldPos = [currMove.xPos, currMove.yPos];
@@ -82,6 +88,24 @@ function drop(ev, ele) {
     child.id = "placed";
     ele.appendChild(child);
   }
+}
+
+// Pieces:
+// 0 - piece1 - right down =  1 , 1
+// 1 = piece2 - right up   =  1 ,-1
+// 2 - piece3 - left  down = -1 , 1
+// 3 - piece4 - left  up   = -1 ,-1
+function cpuDrop() {
+  // currMove is already setup for this function
+  var id = 1;
+  if (currMove.xOri == -1)
+    id += 2;
+  if (currMove.yOri == -1)
+    id += 1;
+  // put cloned child on the board
+  var child = document.getElementById("piece" + id + "-" + currTurn).cloneNode(true);
+  child.id = "placed";
+  document.getElementById(currMove.xPos + "-" + currMove.yPos).appendChild(child);
 }
 
 // func returns number of moves available to the player from the given piece
@@ -120,10 +144,10 @@ function cornerCheck(piece) {
   var y = piece.yPos;
   var p = piece.xOri;
   var q = piece.yOri;
-  return  (x == 0 && y == 0 && p == -1 && q == -1) ||
-          (x == 0 && y == SIZE - 1 && p == -1 && q == 1) ||
-          (x == SIZE - 1 && y == 0 && p == 1 && q == -1) ||
-          (x == SIZE - 1 && y == SIZE - 1 && p == 1 && q == 1);
+  return (x == 0 && y == 0 && p == -1 && q == -1) ||
+         (x == 0 && y == SIZE - 1 && p == -1 && q == 1) ||
+         (x == SIZE - 1 && y == 0 && p == 1 && q == -1) ||
+         (x == SIZE - 1 && y == SIZE - 1 && p == 1 && q == 1);
 }
 
 // true means position IS occupied
@@ -179,7 +203,7 @@ function submitMove() {
     if (firstMove) {
       // first move must be placed in the center
       var center = Math.floor(SIZE / 2);
-      if (currMove.xPos != center && currMove.yPos != center) {
+      if (!(currMove.xPos == center && currMove.yPos == center)) {
         flag = 0;
         message("First move must be placed in the center!");
       }
@@ -215,41 +239,47 @@ function submitMove() {
       if (found == 0) {
         message("Invalid move!");
       } else {
-        // put piece on the board
-        board[currMove.xPos][currMove.yPos] = new Piece(currMove.xPos, currMove.yPos, currMove.xOri, currMove.yOri);
-        // set draggable of placed move to false
-        $("#placed").attr("draggable", "false");
-        // set ID of placed move
-        document.getElementById("placed").id = currMove.xPos + "-" + currMove.yPos + "-placed";
-        // remove current move from player moves
-        var q = 0;
-        if (currMove.xOri == -1)
-          q += 2;
-        if (currMove.yOri == -1)
-          q += 1;
-        (currTurn == 0) ? (player1.moves[q] = 1) : (player2.moves[q] = 1);
-        // set previous move
-        prevMoves[currTurn] = new Piece(currMove.xPos, currMove.yPos, currMove.xOri, currMove.yOri);
-        // check moveCount
-        if (moveCount((currTurn == 0 ? player1 : player2), currMove) == 0) {
-          end(currTurn == 0 ? player1 : player2);
-        } else {
-          // possibly reset player moves
-          var count = 0;
-          for (var i = 0; i < 4; i++)
-            count += (currTurn == 0 ? player1 : player2).moves[i];
-          if (count == 4)
-            for (var i = 0; i < 4; i++)
-              (currTurn == 0 ? player1 : player2).moves[i] = 0;
-          // reset current move
-          currMove.xPos = -1;
-          currMove.yPos = -1;
-          // set next player
-          currTurn = 1 - currTurn;
-          updateUI();
-        }
+        placeMove();
+        if ((currTurn == 0 ? player1 : player2).cpu)
+          cpu();
       }
     }
+  }
+}
+
+function placeMove() {
+  // put piece on the board
+  board[currMove.xPos][currMove.yPos] = new Piece(currMove.xPos, currMove.yPos, currMove.xOri, currMove.yOri);
+  // set draggable of placed move to false
+  $("#placed").attr("draggable", "false");
+  // set ID of placed move
+  document.getElementById("placed").id = currMove.xPos + "-" + currMove.yPos + "-placed";
+  // remove current move from player moves
+  var q = 0;
+  if (currMove.xOri == -1)
+    q += 2;
+  if (currMove.yOri == -1)
+    q += 1;
+  (currTurn == 0) ? (player1.moves[q] = 1) : (player2.moves[q] = 1);
+  // set previous move
+  prevMoves[currTurn] = new Piece(currMove.xPos, currMove.yPos, currMove.xOri, currMove.yOri);
+  // check moveCount
+  if (moveCount((currTurn == 0 ? player1 : player2), currMove) == 0) {
+    end(currTurn == 0 ? player1 : player2);
+  } else {
+    // possibly reset player moves
+    var count = 0;
+    for (var i = 0; i < 4; i++)
+      count += (currTurn == 0 ? player1 : player2).moves[i];
+    if (count == 4)
+      for (var i = 0; i < 4; i++)
+        (currTurn == 0 ? player1 : player2).moves[i] = 0;
+    // reset current move
+    currMove.xPos = -1;
+    currMove.yPos = -1;
+    // set next player
+    currTurn = 1 - currTurn;
+    updateUI();
   }
 }
 
@@ -271,7 +301,7 @@ function updateUI() {
     $("#piece" + (i + 1) + "-" + (1 - currTurn)).attr("draggable", "false");
   }
   // put border around current player's pieces
-  $("#moves-" + currTurn).css("border", "3px solid " + ((currTurn == 0) ? player1.color : player2.color));
+  $("#moves-" + currTurn).css("border", "3px solid " + (currTurn == 0 ? player1 : player2).color);
   $("#moves-" + (1 - currTurn)).css("border", "none");
   // display next moves to current player
   $(".block").css("background", "#E5E4F0");
@@ -289,6 +319,112 @@ function updateUI() {
       $("#" + x + "-" + y).css("background", (currTurn == 0 ? player1 : player2).lightColor);
     y += piece.yOri;
   }
+}
+
+// computer algorithm
+// Pieces:
+// 0 - piece1 - right down =  1 , 1
+// 1 = piece2 - right up   =  1 ,-1
+// 2 - piece3 - left  down = -1 , 1
+// 3 - piece4 - left  up   = -1 ,-1
+function cpu() {
+  message("Calculating move...");
+  // calculates where the current move should be placed
+  if (firstMove) {
+    // cpu goes first - place random piece in the center
+    var m = Math.round(Math.random() * 4);
+    if (m > 3 || m < 0)
+      m = 3;
+    switch (m) {
+      case 0: currMove.xOri =  1; currMove.yOri =  1; break;
+      case 1: currMove.xOri =  1; currMove.yOri = -1; break;
+      case 2: currMove.xOri = -1; currMove.yOri =  1; break;
+      case 3: currMove.xOri = -1; currMove.yOri = -1; break;
+    }
+    (currTurn == 0 ? player1 : player2).moves[m] = 1;
+    var center = Math.floor(SIZE / 2);
+    currMove.xPos = center;
+    currMove.yPos = center;
+    firstMove = false;
+  } else {
+    // regular cpu calculation
+    var avMoves = [];
+    var idx = 0;
+    var piece = prevMoves[1 - currTurn];
+    var x = piece.xPos;
+    var y = piece.yPos;
+    // collect all available spaces
+    while (0 <= x && x < SIZE) {
+      if (!isOccupied(x, y))
+        avMoves[idx++] = {x, y};
+      x += piece.xOri;
+    }
+    x = piece.xPos;
+    while (0 <= y && y < SIZE) {
+      if (!isOccupied(x, y))
+        avMoves[idx++] = {x, y};
+      y += piece.yOri;
+    }
+    // check for winning moves
+    var choice = 0;
+    var player = player2; // change this later
+    var xPos = 0;
+    var yPos = 0;
+    var xOri = 0;
+    var yOri = 0;
+    var mc = -1;
+    for (var i = 0; i < idx && mc != 0; i++) {
+      // go thru each available move position
+      xPos = avMoves[i].x;
+      yPos = avMoves[i].y;
+      for (var j = 0; j < 4 && mc != 0; j++) {
+        // go thru each piece orientation
+        if (player.moves[j] == 0) {
+          // move has not been played, let's test it
+          xOri = -1;
+          yOri = -1;
+          if (j < 2)
+            xOri = 1;
+          if (j % 2 == 0)
+            yOri = 1;
+          if (!((xPos == 0 && yPos == 0 && xOri == -1 && yOri == -1) ||
+                (xPos == 0 && yPos == SIZE - 1 && xOri == -1 && yOri == 1) ||
+                (xPos == SIZE - 1 && yPos == 0 && xOri == 1 && yOri == -1) ||
+                (xPos == SIZE - 1 && yPos == SIZE - 1 && xOri == 1 && yOri == 1)))
+            mc = moveCount(player, {xPos, yPos, xOri, yOri});
+        }
+      }
+    }
+    // set currMove depending
+    if (mc != 0) {
+      // random choice
+      var p = Math.round(Math.random() * (idx - 1));
+      if (p < 0 || p >= idx)
+        p = idx - 1;
+      xPos = avMoves[p].x;
+      yPos = avMoves[p].y;
+      var o = Math.round(Math.random() * 3);
+      if (o < 0 || o > 3)
+        o = 3;
+      while (player.moves[o] != 0) {
+        o++;
+        if (o > 3)
+          o = 0;
+      }
+      xOri = -1;
+      yOri = -1;
+      if (o < 2)
+        xOri = 1;
+      if (o % 2 == 0)
+        yOri = 1;
+    }
+    // if it's zero, then we set the winning move
+    currMove = {xPos, yPos, xOri, yOri};
+  }
+  // put piece on board UI
+  cpuDrop();
+  // places the calculated move
+  placeMove();
 }
 
 // starting point - initializes all of our variables
@@ -327,6 +463,9 @@ function start() {
   // set player colors
   player1.color = $("#color1").val();
   player2.color = $("#color2").val();
+  // set player lightened color
+  player1.lightColor = lighten(player1.color);
+  player2.lightColor = lighten(player2.color);
   // set player cpu
   player1.cpu = false;
   player2.cpu = false;
@@ -337,14 +476,17 @@ function start() {
   }
   // set who's first
   currTurn = $("input[name=first]:checked").val();
-  // update computer
-  var type = $("input[name=type]:checked").val();
-  if (type == 1)
-    player2.cpu = true;
   // update the interface
   clearGrid();
   drawGrid();
   updateUI();
+  // update player cpu
+  var type = $("input[name=type]:checked").val();
+  if (type == 1) {
+    player2.cpu = true;
+    if (currTurn == 1)
+      cpu();
+  }
 }
 
 // ending point - displays the winner
